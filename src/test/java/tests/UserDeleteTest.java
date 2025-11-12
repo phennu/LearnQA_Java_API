@@ -1,11 +1,13 @@
 package tests;
 
+import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import lib.ApiCoreRequest;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -18,10 +20,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@Epic("Delete User Cases")
+@Feature("Deletion")
+@Owner("Ilyas Nurtazin")
+@Tag("api")
+@Tag("homework")
+@Tag("learnqa")
 
 public class UserDeleteTest extends BaseTestCase {
     private final ApiCoreRequest apiCoreRequest = new ApiCoreRequest();
         @Test
+        @Tag("Negative")
         @Description("this test deletes user with ID 2")
         @DisplayName("test delete user with id 2")
         public void testDeleteUserTwo(){
@@ -30,24 +39,25 @@ public class UserDeleteTest extends BaseTestCase {
             authData.put("email", "vinkotov@example.com");
             authData.put("password", "1234");
 
-            Response responseGetAuth = apiCoreRequest.makePostRequest("https://playground.learnqa.ru/api/user/login", authData);
+            Response responseGetAuth = apiCoreRequest.makePostRequest("https://playground.learnqa.ru/api_dev/user/login", authData);
             //GET AUTH INFO
             String cookie = this.getCookie(responseGetAuth,"auth_sid");
             String header = this.getHeader(responseGetAuth,"x-csrf-token");
             int userId = this.getIntFromJson(responseGetAuth, "user_id");
             //DELETE
-            Response responseDeleteUser = apiCoreRequest.makeDeleteRequestAuthUser("https://playground.learnqa.ru/api/user/", header, cookie, userId);
+            Response responseDeleteUser = apiCoreRequest.makeDeleteRequestAuthUser("https://playground.learnqa.ru/api_dev/user/", header, cookie, userId);
             //System.out.println(responseDeleteUser.asString());
             Assertions.assertJsonByName(responseDeleteUser, "error", "Please, do not delete test users with ID 1, 2, 3, 4 or 5.");
     }
 
     @Test
+    @Tag("Positive")
     @Description("this test creates user and deletes it")
     @DisplayName("test create and delete user")
     public void testCreateAndDeleteUser(){
         //GENERATE USER
         Map<String,String> userData = DataGenerator.getRegistrationData();
-        Response responseCreateAuth = apiCoreRequest.makePostRequest("https://playground.learnqa.ru/api/user/", userData);
+        Response responseCreateAuth = apiCoreRequest.makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData);
 
         //LOGIN
         Map<String ,String> authData = new HashMap<>();
@@ -55,24 +65,25 @@ public class UserDeleteTest extends BaseTestCase {
         authData.put("password", userData.get("password"));
 
         //GET AUTH INFO
-        Response responseGetAuth = apiCoreRequest.makeGetRequestAuth("https://playground.learnqa.ru/api/user/login", authData);
+        Response responseGetAuth = apiCoreRequest.makeGetRequestAuth("https://playground.learnqa.ru/api_dev/user/login", authData);
         String header = this.getHeader(responseGetAuth,"x-csrf-token");
         String cookie = this.getCookie(responseGetAuth,"auth_sid");
         int userId = this.getIntFromJson(responseGetAuth,"user_id");
         //DELETE
-        Response responseDeleteUser = apiCoreRequest.makeDeleteRequestAuthUser("https://playground.learnqa.ru/api/user/", header, cookie, userId);
+        Response responseDeleteUser = apiCoreRequest.makeDeleteRequestAuthUser("https://playground.learnqa.ru/api_dev/user/", header, cookie, userId);
         //GET USER
-        Response responseGetUserById = apiCoreRequest.makeGetRequestWithUserId("https://playground.learnqa.ru/api/user/", userId);
+        Response responseGetUserById = apiCoreRequest.makeGetRequestWithUserId("https://playground.learnqa.ru/api_dev/user/", userId);
         Assertions.assertResponseTextEquals(responseGetUserById, "User not found");
 
     }
     @Test
+    @Tag("Negative")
     @Description("this test creates user and tries to delete different user")
     @DisplayName("test create and delete diff user")
     public void testCreateAndDeleteDiffUser(){
         //GENERATE USER
         Map<String,String> userData = DataGenerator.getRegistrationData();
-        Response responseCreateAuth = apiCoreRequest.makePostRequest("https://playground.learnqa.ru/api/user/", userData);
+        Response responseCreateAuth = apiCoreRequest.makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData);
 
         //LOGIN
         Map<String ,String> authData = new HashMap<>();
@@ -80,12 +91,12 @@ public class UserDeleteTest extends BaseTestCase {
         authData.put("password", userData.get("password"));
 
         //GET AUTH INFO
-        Response responseGetAuth = apiCoreRequest.makeGetRequestAuth("https://playground.learnqa.ru/api/user/login", authData);
+        Response responseGetAuth = apiCoreRequest.makeGetRequestAuth("https://playground.learnqa.ru/api_dev/user/login", authData);
         String header = this.getHeader(responseGetAuth,"x-csrf-token");
         String cookie = this.getCookie(responseGetAuth,"auth_sid");
         int userId = this.getIntFromJson(responseGetAuth,"user_id");
         //DELETE
-        Response responseDeleteUser = apiCoreRequest.makeDeleteRequestWithDifferentUser("https://playground.learnqa.ru/api/user/", header, cookie, userId+1);
+        Response responseDeleteUser = apiCoreRequest.makeDeleteRequestWithDifferentUser("https://playground.learnqa.ru/api_dev/user/", header, cookie, userId+1);
         Assertions.assertJsonByName(responseDeleteUser, "error", "This user can only delete their own account.");
 
     }
