@@ -99,4 +99,35 @@ public class ApiCoreRequest {
                 .post(url)
                 .andReturn();
     }
+
+    @Step("Make a PUT-request not authorized")
+    public Response makePutRequestNotAuthorized(String url, Map<String, String> editData, int userId) {
+        return given()
+                .filter(new AllureRestAssured())
+                .body(editData)
+                .put(url+userId)
+                .andReturn();
+    }
+    @Step("Make a PUT-request diff user")
+    public Response makePutRequestWithDifferentUser(String url, Map<String ,String > editData, String token, String cookie, int userId) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header(new Header("x-csrf-token", token))
+                .cookie("auth_sid", cookie)
+                .body(editData)
+                .put(url+userId)
+                .andReturn();
+    }
+    @Step("Make a PUT-request diff user")
+    public Response makePutRequestAuthUser(String url, Map<String ,String > editData, String token, String cookie, int userId) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header(new Header("x-csrf-token", token))
+                .cookie("auth_sid", cookie)
+                .body(editData)
+                .put(url+userId)
+                .andReturn();
+    }
+
+
 }
