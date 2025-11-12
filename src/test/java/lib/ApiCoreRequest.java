@@ -47,6 +47,13 @@ public class ApiCoreRequest {
                 .get(url+userId)
                 .andReturn();
     }
+    @Step("Make a GET-request with user id")
+    public Response makeGetRequestWithUserId(String url, int userId) {
+        return given()
+                .filter(new AllureRestAssured())
+                .get(url+userId)
+                .andReturn();
+    }
 
     @Step("Make a POST-request auth")
     public Response makeGetRequestAuth(String url, Map<String, String> authData) {
@@ -118,7 +125,7 @@ public class ApiCoreRequest {
                 .put(url+userId)
                 .andReturn();
     }
-    @Step("Make a PUT-request diff user")
+    @Step("Make a PUT-request")
     public Response makePutRequestAuthUser(String url, Map<String ,String > editData, String token, String cookie, int userId) {
         return given()
                 .filter(new AllureRestAssured())
@@ -126,6 +133,25 @@ public class ApiCoreRequest {
                 .cookie("auth_sid", cookie)
                 .body(editData)
                 .put(url+userId)
+                .andReturn();
+    }
+    @Step("Make a DELETE-request")
+    public Response makeDeleteRequestAuthUser(String url, String token, String cookie, int userId) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header(new Header("x-csrf-token", token))
+                .cookie("auth_sid", cookie)
+                .delete(url+userId)
+                .andReturn();
+    }
+
+    @Step("Make a DELETE-request diff user")
+    public Response makeDeleteRequestWithDifferentUser(String url, String token, String cookie, int userId) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header(new Header("x-csrf-token", token))
+                .cookie("auth_sid", cookie)
+                .delete(url+userId)
                 .andReturn();
     }
 
