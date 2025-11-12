@@ -38,6 +38,25 @@ public class ApiCoreRequest {
                 .andReturn();
     }
 
+    @Step("Make a GET-request with different user")
+    public Response makeGetRequestWithDifferentUser(String url, String token, String cookie, int userId) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header(new Header("x-csrf-token", token))
+                .cookie("auth_sid", cookie)
+                .get(url+userId)
+                .andReturn();
+    }
+
+    @Step("Make a POST-request auth")
+    public Response makeGetRequestAuth(String url, Map<String, String> authData) {
+        return given()
+                .filter(new AllureRestAssured())
+                .body(authData)
+                .post(url)
+                .andReturn();
+    }
+
     @Step("Make a POST-request")
     public Response makePostRequest(String url, Map<String, String> authData) {
         return given()
