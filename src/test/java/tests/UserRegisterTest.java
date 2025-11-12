@@ -84,7 +84,7 @@ public class UserRegisterTest extends BaseTestCase {
         Map<String, String> userData = DataGenerator.getRegistrationData();
         userData.put("firstName", DataGenerator.generateRandomString(251));
 
-        Response responseRegisterLongFirstname = apiCoreRequest.makePostRequestWithShortFirstname("https://playground.learnqa.ru/api/user/", userData);
+        Response responseRegisterLongFirstname = apiCoreRequest.makePostRequestWithLongFirstname("https://playground.learnqa.ru/api/user/", userData);
         Assertions.assertResponseTextEquals(responseRegisterLongFirstname, "The value of 'firstName' field is too long");
     }
 
