@@ -11,35 +11,69 @@ import static io.restassured.RestAssured.given;
 
 public class ApiCoreRequest {
     @Step("Make a GET-request with token and auth cookie")
-    public Response makeGetRequest(String url, String token, String cookie){
+    public Response makeGetRequest(String url, String token, String cookie) {
         return given()
                 .filter(new AllureRestAssured())
-                .header(new Header("x-csrf-token",token))
-                .cookie("auth_sid",cookie)
+                .header(new Header("x-csrf-token", token))
+                .cookie("auth_sid", cookie)
                 .get(url)
                 .andReturn();
     }
 
     @Step("Make a GET-request with auth cookie only")
-    public Response makeGetRequestWithCookie(String url, String cookie){
+    public Response makeGetRequestWithCookie(String url, String cookie) {
         return given()
                 .filter(new AllureRestAssured())
-                .cookie("auth_sid",cookie)
+                .cookie("auth_sid", cookie)
                 .get(url)
                 .andReturn();
     }
 
     @Step("Make a GET-request with token only")
-    public Response makeGetRequestWithToken(String url, String token){
+    public Response makeGetRequestWithToken(String url, String token) {
         return given()
                 .filter(new AllureRestAssured())
-                .header(new Header("x-csrf-token",token))
+                .header(new Header("x-csrf-token", token))
                 .get(url)
                 .andReturn();
     }
 
     @Step("Make a POST-request")
-    public Response makePostRequest(String url, Map<String ,String > authData ){
+    public Response makePostRequest(String url, Map<String, String> authData) {
+        return given()
+                .filter(new AllureRestAssured())
+                .body(authData)
+                .post(url)
+                .andReturn();
+    }
+
+    @Step("Make a POST-request incorrect email")
+    public Response makePostRequestIncorrectEmail(String url, Map<String, String> authData) {
+        return given()
+                .filter(new AllureRestAssured())
+                .body(authData)
+                .post(url)
+                .andReturn();
+    }
+
+    @Step("Make a POST-request no field")
+    public Response makePostRequestNoField(String url, Map<String, String> authData) {
+        return given()
+                .filter(new AllureRestAssured())
+                .body(authData)
+                .post(url)
+                .andReturn();
+    }
+    @Step("Make a POST-request with short firstName")
+    public Response makePostRequestWithShortFirstname(String url, Map<String, String> authData) {
+        return given()
+                .filter(new AllureRestAssured())
+                .body(authData)
+                .post(url)
+                .andReturn();
+    }
+    @Step("Make a POST-request with long firstName")
+    public Response makePostRequestWithLongFirstname(String url, Map<String, String> authData) {
         return given()
                 .filter(new AllureRestAssured())
                 .body(authData)
